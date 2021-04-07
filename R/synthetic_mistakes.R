@@ -116,24 +116,36 @@ replaces <- function(word){
   return(replaces_list)
 }
 
-apply_depth<- function(depth=1, fun=transposes, word){
+apply_depth<- function(depth=1, fun=transposes, word, warm.start=0, results=NULL){
   depth=depth+1
+  if(warm.start==0){
   results= list()
   results[[1]]= word
+  }
   for(i in 2:depth){
     results[[i]]=unlist(purrr::map(results[[i-1]],fun))
   }
   return(results)
 }
 
-apply_depth_multiple<- function(funs,word){
+apply_depth_multiple<- function(funs,word,...){
   results= list()
   results[[1]]= word
+
+  index=0
   for(i in funs){
+  index= index+1
   fun=eval(parse(text =i ))
-  #results[[name]]<- apply_depth(fun)
+  if(index==1){
+  results<- apply_depth(fun=fun,word = word, warm.start = 1,results = results)
+  results[[1]]<-NULL
+  } else {
+    temp_list=apply_depth(fun=fun,word = word, warm.start = 1,results = results)
+    temp_list[[1]]<- NULL
+    results= append(results, temp_list)
   }
-  apply_depth
+  }
+  results
 }
 
 #map(unlist(list(c("hola","chao","yes")),recursive = F),~splits(.))[[1]]
