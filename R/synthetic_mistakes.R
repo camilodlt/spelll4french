@@ -73,6 +73,49 @@ return(transposes_list)
 
 
 
+# replaces   = [L + c + R[1:]           for L, R in splits if R for c in letters]
+
+# for the moment: possible letters:
+letters    = 'abcdefghijklmnopqrstuvwxyz'
+letters= strsplit(letters,split="")[[1]]
+
+
+replaces <- function(word){
+
+  chars=strsplit(word,split="")[[1]]
+
+  size=length(chars)
+
+  replaces_list = list()
+
+  for(i in 1:size){
+    begin= if((i-1)>0) {paste(chars[1:(i-1)], collapse = "")}
+
+    end = if((i+1)<=size) {paste(chars[(i+1):size],collapse ="")}
+
+    if(!is.null(end)){
+    combinations= purrr::cross(list(letters,end))
+
+    concatenations= unlist(purrr::map(combinations,~paste(purrr::flatten_chr(.), collapse="")))
+    replaces_list[[i]]= concatenations
+    }
+
+    if(!is.null(begin) & !is.null(end)){
+      replaces_list[[i]]= paste0(begin, replaces_list[[i]])
+    }
+
+    if(!is.null(begin) & is.null(end)){
+
+      combinations= purrr::cross(list(begin,letters))
+
+      concatenations= unlist(purrr::map(combinations,~paste(purrr::flatten_chr(.), collapse="")))
+
+      replaces_list[[i]]= concatenations
+    }
+  }
+  return(replaces_list)
+}
+
 apply_depth<- function(depth=1, fun=transposes, word){
   depth=depth+1
   results= list()
@@ -83,18 +126,17 @@ apply_depth<- function(depth=1, fun=transposes, word){
   return(results)
 }
 
-apply_depth(depth = 2,word = "hola",fun = transposes)
-
-
-
-
-
-# Hola
-  # ohla
-  # Hloa
-  # hoal
+apply_depth_multiple<- function(funs,word){
+  results= list()
+  results[[1]]= word
+  for(i in funs){
+  fun=eval(parse(text =i ))
+  #results[[name]]<- apply_depth(fun)
+  }
+  apply_depth
+}
 
 #map(unlist(list(c("hola","chao","yes")),recursive = F),~splits(.))[[1]]
 
-
+x<- letters
 
