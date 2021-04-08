@@ -116,34 +116,62 @@ replaces <- function(word){
   return(replaces_list)
 }
 
-apply_depth<- function(depth=1, fun=transposes, word, warm.start=0, results=NULL){
+apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NULL){
+  function_name= fun
+  fun_eval=eval(parse(text =fun ))
   depth=depth+1
+  # if called directly and word provided
   if(warm.start==0){
-  results= list()
-  results[[1]]= word
-  }
+  temp= list()
+  temp[[1]]= word
+
   for(i in 2:depth){
-    results[[i]]=unlist(purrr::map(results[[i-1]],fun))
+    temp_result=unlist(purrr::map(temp[[(i-1)]],fun_eval))
+    temp_result= unique(temp_result)
+    # append
+    temp_name= paste0(function_name,(i-1))
+    temp[[temp_name]]<- temp_result
+
+  }
+  temp[[1]]<- NULL
+  } else
+  # if called by apply multiple
+  {
+    names_new_list<- names(results)
+    #results is provided
+    for(i in 2:depth){
+      temp_result=unique(purrr::map( # every sublist
+        results[names_new_list],~unique(unlist(purrr::map(# every word
+          .,fun_eval)
+          )))
+        )
+      # names for each sublist
+      over=names(x)
+      # Concatenated names
+      names_new_list= names_new_list=paste0(function_name,(i-1),'_',over)
+      #Set names
+      temp_result<-purrr::set_names(temp_result,nm =names_new_list)
+
+      # append
+      results=append(results,temp_result)
+    }
+
   }
   return(results)
 }
 
+
+
 apply_depth_multiple<- function(funs,word,...){
+
   results= list()
   results[[1]]= word
 
   index=0
+
   for(i in funs){
-  index= index+1
-  fun=eval(parse(text =i ))
-  if(index==1){
-  results<- apply_depth(fun=fun,word = word, warm.start = 1,results = results)
-  results[[1]]<-NULL
-  } else {
-    temp_list=apply_depth(fun=fun,word = word, warm.start = 1,results = results)
-    temp_list[[1]]<- NULL
+    temp_list= apply_depth(fun=i,word = word, warm.start = 1,results = results)
     results= append(results, temp_list)
-  }
   }
   results
 }
