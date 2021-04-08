@@ -116,6 +116,11 @@ replaces <- function(word){
   return(replaces_list)
 }
 
+
+# INSERTS
+
+###
+
 apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NULL){
   function_name= fun
   fun_eval=eval(parse(text =fun ))
@@ -179,7 +184,4 @@ apply_depth_multiple<- function(funs,word,...){
   results
 }
 
-#map(unlist(list(c("hola","chao","yes")),recursive = F),~splits(.))[[1]]
-
-x<- letters
 
