@@ -149,9 +149,7 @@ apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NU
       over=names_new_list # old names
 
       # Concatenated names
-      names_new_list= names_new_list=paste0(substr(function_name,1,4),(i-1),'_',over,'_pref',(i-1))
-      # eliminate pref index
-      names_new_list<- purrr::map_chr(names_new_list,~sub(x = .,pattern = "_pref[0-9]",""))
+      names_new_list= names_new_list=paste0(substr(function_name,1,4),(i-1),'_',over)
       #Set names
       temp_result<-purrr::set_names(temp_result,nm =names_new_list)
 
