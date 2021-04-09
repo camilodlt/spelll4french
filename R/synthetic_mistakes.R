@@ -1,4 +1,5 @@
-#splits = [(word[:i], word[i:]) for i in range(len(word) + 1)]
+letters    = 'abcdefghijklmnopqrstuvwxyz'
+letters= strsplit(letters,split="")[[1]]
 
 splits = function(word){
 
@@ -71,15 +72,6 @@ transposes <- function(word){
 return(transposes_list)
 }
 
-
-
-# replaces   = [L + c + R[1:]           for L, R in splits if R for c in letters]
-
-# for the moment: possible letters:
-letters    = 'abcdefghijklmnopqrstuvwxyz'
-letters= strsplit(letters,split="")[[1]]
-
-
 replaces <- function(word){
 
   chars=strsplit(word,split="")[[1]]
@@ -118,6 +110,50 @@ replaces <- function(word){
 
 
 # INSERTS
+insertions<-function(word,letters=letters_2){
+
+  chars=strsplit(word,split="")[[1]]
+
+  size=length(chars)
+
+  insertions_list = list()
+
+  for(i in 1:(size+1)){
+
+    if(i == 1) { # first it. No begin
+     begin= NULL
+     end= paste(chars,collapse = "")
+    }
+
+    if (i %in% 2:(size+1)){
+    begin= paste(chars[1:(i-1)], collapse = "")
+
+    end = if(i<=size) {paste(chars[i:size],collapse ="")}
+    }
+
+    if(!is.null(end)){ # if the is an end
+      combinations= purrr::cross(list(letters,end))
+
+      concatenations= unlist(purrr::map(combinations,~paste(purrr::flatten_chr(.), collapse="")))
+      insertions_list[[i]]= concatenations
+    }
+
+    if(!is.null(begin) & !is.null(end)){ # if there is both
+      insertions_list[[i]]= paste0(begin, insertions_list[[i]])
+    }
+
+    if(!is.null(begin) & is.null(end)){ # if there is only a beginning
+
+      combinations= purrr::cross(list(begin,letters))
+
+      concatenations= unlist(purrr::map(combinations,~paste(purrr::flatten_chr(.), collapse="")))
+
+      insertions_list[[i]]= concatenations
+    }
+  }
+  return(insertions_list)
+}
+
 
 ###
 
@@ -139,6 +175,7 @@ apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NU
 
   }
   temp[[1]]<- NULL
+  results=temp
   } else
   # if called by apply multiple
   {
@@ -168,7 +205,8 @@ apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NU
 
 
 
-apply_depth_multiple<- function(funs,word,...){
+
+apply_depth_multiple<- function(funs,word){
 
   results= list()
   results[["orig_word"]]= word
@@ -176,12 +214,16 @@ apply_depth_multiple<- function(funs,word,...){
   index=0
 
   for(i in funs){
-    temp_list= apply_depth(fun=i,word = word, warm.start = 1,results = results,...)
+    temp_list= apply_depth(fun=i,word = word, warm.start = 1,results = results)
     index=index+1
     #if(index==1){results[["orig_word"]]<- NULL}
     results= temp_list
   }
   results
 }
+
+# on dictionnary
+  #Prefer split first
+##
 
 
