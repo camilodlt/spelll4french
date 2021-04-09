@@ -1,5 +1,3 @@
-letters    = 'abcdefghijklmnopqrstuvwxyz'
-letters= strsplit(letters,split="")[[1]]
 
 splits = function(word){
 
@@ -72,7 +70,7 @@ transposes <- function(word){
 return(transposes_list)
 }
 
-replaces <- function(word){
+replaces <- function(word,letters=tokens){
 
   chars=strsplit(word,split="")[[1]]
 
@@ -110,7 +108,7 @@ replaces <- function(word){
 
 
 # INSERTS
-insertions<-function(word,letters=letters_2){
+insertions<-function(word,letters=tokens){
 
   chars=strsplit(word,split="")[[1]]
 
