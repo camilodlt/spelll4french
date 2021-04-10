@@ -7,7 +7,7 @@ check_proper_dictionary<- function(word,dictionary=dict){
   proper= proper_noun(word)
   #if(proper %in% dict$Flexion) {return(TRUE)} else {return(FALSE)}
   # With DT
-  subset<-test[Flexion==proper][['Flexion']]
+  subset<-dictionary[Flexion==proper][['Flexion']]
   if(!identical(subset, character(0))){return(TRUE)} else {return(FALSE)}
 }
 
@@ -16,7 +16,7 @@ check_dictionary<- function(word,dictionary=dict){
   #if(word %in% dict$Flexion) {return(TRUE)} else {return(FALSE)}
 
   # With DT
-  subset<-test[Flexion==word][['Flexion']]
+  subset<-dictionary[Flexion==word][['Flexion']]
   if(!identical(subset, character(0))){return(TRUE)} else {return(FALSE)}
 
 }
@@ -48,6 +48,6 @@ check_words<- function(word,dictionary= dict,...){
     #in_dict=purrr::map_lgl(results, check_dictionary, dictionary)
     #indices= which(in_dict)
     #extract = results[indices]
-    return(extract)
+    #return(extract)
   }
 }
