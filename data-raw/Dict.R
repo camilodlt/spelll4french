@@ -2,7 +2,7 @@
 
 library(dplyr)
 
-x<-read.delim("lexique-grammalecte-fr-v7.0.txt",
+x<-read.delim("data/lexique-grammalecte-fr-v7.0.txt",
               header = T,sep="\t",skip=14,encoding = "UTF-8")
 
 # Normalize function
@@ -25,4 +25,7 @@ x$Total.occurrences<- x$Total.occurrences+1
 x$Total.occurrences<- normalize(x$Total.occurrences)
 
 dict<- x
+
+# DT
+setDT(dict,key='Flexion')
 usethis::use_data(dict,internal = TRUE,overwrite = TRUE)
