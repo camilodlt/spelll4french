@@ -21,5 +21,6 @@ tokens<- c("µ", "a", "á", "à", "â", "ä", "ã","æ", "b", "c",
   "û", "ü", "v", "w", "x", "y", "ÿ", "z")
 
 usethis::use_data(extended_tokens,tokens,internal = TRUE,overwrite = TRUE)
+usethis::use_data(tokens,tokens,internal = TRUE,overwrite = TRUE)
 
 
