@@ -44,7 +44,7 @@ check_words<- function(word,dictionary= dict,...){
     setDT(results,key = 'Flexion')
     subset<-dictionary[results,nomatch=0]
       # Check emptyness
-    if(identical(subset, character(0))){return(word) else {subset[['Flexion']]}}
+    if(identical(subset, character(0))){return(word)} else {subset[['Flexion']]}
     #in_dict=purrr::map_lgl(results, check_dictionary, dictionary)
     #indices= which(in_dict)
     #extract = results[indices]
