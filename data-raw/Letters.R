@@ -3,7 +3,7 @@
 library(dplyr)
 library(tokenizers)
 
-x<-read.delim("lexique-grammalecte-fr-v7.0.txt",
+x<-read.delim("data/lexique-grammalecte-fr-v7.0.txt",
               header = T,sep="\t",skip=14,encoding = "UTF-8")
 
 # distinct words
