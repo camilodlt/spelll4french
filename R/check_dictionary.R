@@ -1,3 +1,7 @@
+
+#.datatable.aware=TRUE
+#' @imports data.table
+
 proper_noun<- function(word){
   upper_word=stringr::str_to_title(word)
   return(upper_word)
