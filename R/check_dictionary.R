@@ -1,12 +1,13 @@
 
 #.datatable.aware=TRUE
-#' @imports data.table
+# @imports data.table
 
 proper_noun<- function(word){
   upper_word=stringr::str_to_title(word)
   return(upper_word)
 }
 
+#' @export
 check_proper_dictionary<- function(word,dictionary=dict){
   proper= proper_noun(word)
   #if(proper %in% dict$Flexion) {return(TRUE)} else {return(FALSE)}
