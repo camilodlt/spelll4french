@@ -32,5 +32,6 @@ x$Total.occurrences<- normalize(x$Total.occurrences)
 
 # DT
 dict<- as.data.table(x)
+setkey(dict,Flexion)
 
 usethis::use_data(dict,internal = TRUE,overwrite = TRUE)
