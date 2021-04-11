@@ -30,8 +30,7 @@ x$Total.occurrences<- x$Total.occurrences+1
 # Normalize frequency count
 x$Total.occurrences<- normalize(x$Total.occurrences)
 
-dict<- x
-
 # DT
-data.table::setDT(dict,key='Flexion')
+dict<- as.data.table(x)
+
 usethis::use_data(dict,internal = TRUE,overwrite = TRUE)
