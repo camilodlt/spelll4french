@@ -8,7 +8,7 @@ column_names<-c("id", "fid", "Flexion", "Lemme", "Étiquettes", "Métagraphe",
 
 x<-read.delim("~/Data_spell/lexique-grammalecte-fr-v7.0.txt",
               header = FALSE,sep="\t",skip=16,
-              #encoding = "UTF-8",
+              encoding = "UTF-8",
               col.names =column_names)
 
 # Normalize function
@@ -33,5 +33,5 @@ x$Total.occurrences<- normalize(x$Total.occurrences)
 dict<- x
 
 # DT
-setDT(dict,key='Flexion')
+data.table::setDT(dict,key='Flexion')
 usethis::use_data(dict,internal = TRUE,overwrite = TRUE)

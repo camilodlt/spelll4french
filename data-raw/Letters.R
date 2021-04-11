@@ -7,7 +7,7 @@ column_names<-c("id", "fid", "Flexion", "Lemme", "Étiquettes", "Métagraphe",
 
 x<-read.delim("~/Data_spell/lexique-grammalecte-fr-v7.0.txt",
               header = FALSE,sep="\t",skip=16,
-              #encoding = "UTF-8",
+              encoding = "UTF-8",
               col.names =column_names)
 
 # distinct words
