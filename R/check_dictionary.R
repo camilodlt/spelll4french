@@ -26,6 +26,7 @@ check_dictionary<- function(word,dictionary=dict){
 
 }
 
+#
 check_words<- function(word,dictionary= dict,...){
 # word in dict
   word_in_dict=check_dictionary(word,dictionary)
