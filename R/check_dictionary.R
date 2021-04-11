@@ -6,7 +6,6 @@ proper_noun<- function(word){
   upper_word=stringr::str_to_title(word)
   return(upper_word)
 }
-
 #' @export
 check_proper_dictionary<- function(word,dictionary=dict){
   proper= proper_noun(word)
@@ -16,6 +15,7 @@ check_proper_dictionary<- function(word,dictionary=dict){
   if(!identical(subset, character(0))){return(TRUE)} else {return(FALSE)}
 }
 
+#' @export
 check_dictionary<- function(word,dictionary=dict){
 
   #if(word %in% dict$Flexion) {return(TRUE)} else {return(FALSE)}
