@@ -1,10 +1,14 @@
 ## code to prepare `Letters` dataset goes here
 
-library(dplyr)
-library(tokenizers)
+column_names<-c("id", "fid", "Flexion", "Lemme", "Étiquettes", "Métagraphe",
+                "Metaphone2", "Notes", "Sémantique", "Étymologie", "Sous.dictionnaire",
+                "Google.1.grams", "Wikipédia", "Wikisource", "Littérature", "Total.occurrences",
+                "Doublons", "Multiples", "Fréquence", "Indice.de.fréquence")
 
-x<-read.delim("data/lexique-grammalecte-fr-v7.0.txt",
-              header = T,sep="\t",skip=14,encoding = "UTF-8")
+x<-read.delim("~/Data_spell/lexique-grammalecte-fr-v7.0.txt",
+              header = FALSE,sep="\t",skip=16,
+              #encoding = "UTF-8",
+              col.names =column_names)
 
 # distinct words
 x<-x%>% distinct(Flexion)
