@@ -106,9 +106,8 @@ replaces <- function(word,letters=tokens){
   return(replaces_list)
 }
 
-# insertions vect
-
-insertions2<-function(word,letters=tokens){
+# INSERTS
+insertions<-function(word,letters=tokens){
   chars=strsplit(word,split="")[[1]]
 
   size=length(chars)
@@ -116,9 +115,9 @@ insertions2<-function(word,letters=tokens){
   insertions_list = list()
   begin=list()
   end= list()
-  for(i in 1:(length(chars)+1)){
+  for(i in 1:(size+1)){
     temp_begin= if((i-1)==0){character(0)}else{chars[1:i-1]}
-    temp_end=if(i>length(chars)){character(0)}else{chars[i:length(chars)]}
+    temp_end=if(i>size){character(0)}else{chars[i:size]}
 
     # paste
     temp_begin= paste0(temp_begin,collapse = '')
@@ -141,53 +140,6 @@ insertions2<-function(word,letters=tokens){
   insertions_list <-purrr::map2(begin,end,paste0)
   return(insertions_list)
   }
-
-
-# INSERTS
-insertions<-function(word,letters=tokens){
-
-  chars=strsplit(word,split="")[[1]]
-
-  size=length(chars)
-
-  insertions_list = list()
-
-  for(i in 1:(size+1)){
-
-    if(i == 1) { # first it. No begin
-     begin= NULL
-     end= paste(chars,collapse = "")
-    }
-
-    if (i %in% 2:(size+1)){
-    begin= paste(chars[1:(i-1)], collapse = "")
-
-    end = if(i<=size) {paste(chars[i:size],collapse ="")}
-    }
-
-    if(!is.null(end)){ # if the is an end
-      combinations= purrr::cross(list(letters,end))
-
-      concatenations= unlist(purrr::map(combinations,~paste(purrr::flatten_chr(.), collapse="")))
-      insertions_list[[i]]= concatenations
-    }
-
-    if(!is.null(begin) & !is.null(end)){ # if there is both
-      insertions_list[[i]]= paste0(begin, insertions_list[[i]])
-    }
-
-    if(!is.null(begin) & is.null(end)){ # if there is only a beginning
-
-      combinations= purrr::cross(list(begin,letters))
-
-      concatenations= unlist(purrr::map(combinations,~paste(purrr::flatten_chr(.), collapse="")))
-
-      insertions_list[[i]]= concatenations
-    }
-  }
-  return(insertions_list)
-}
-
 
 ###
 
