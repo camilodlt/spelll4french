@@ -67,4 +67,14 @@ check_words<- function(word,dictionary= dict, n_transformations='single_trans',
       # Check emptyness
       if(identical(subset, character(0))){return(word)} else {subset[['Flexion']]}
     }
+    if(n_transformations=='simple_trans'){
+      results = simple_apply(word = word,funs=fun,...) # transformations must be provided
+      results=unique(unlist(results))
+      # DT
+      results= data.frame(Flexion=results)
+      setDT(results,key = 'Flexion')
+      subset<-dictionary[results,nomatch=0]
+      # Check emptyness
+      if(identical(subset, character(0))){return(word)} else {subset[['Flexion']]}
+    }
 }}
