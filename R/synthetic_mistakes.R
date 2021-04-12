@@ -106,6 +106,42 @@ replaces <- function(word,letters=tokens){
   return(replaces_list)
 }
 
+# insertions vect
+
+insertions2<-function(word,letters=tokens){
+  chars=strsplit(word,split="")[[1]]
+
+  size=length(chars)
+
+  insertions_list = list()
+  begin=list()
+  end= list()
+  for(i in 1:(length(chars)+1)){
+    temp_begin= if((i-1)==0){character(0)}else{chars[1:i-1]}
+    temp_end=if(i>length(chars)){character(0)}else{chars[i:length(chars)]}
+
+    # paste
+    temp_begin= paste0(temp_begin,collapse = '')
+    temp_end= paste0(temp_end,collapse = '')
+
+    # append
+    begin= append(begin,temp_begin)
+    end= append(end,temp_end)
+  }
+  # Combine with Tokens
+  for(i in 1:length(begin)){
+    if(i==1){
+      begin[[i]]<- tokens
+    }
+    if(i>1){
+      begin[[i]]<- paste0(begin[[i]],tokens)
+    }
+  }
+  # end result
+  insertions_list <-purrr::map2(begin,end,paste0)
+  return(insertions_list)
+  }
+
 
 # INSERTS
 insertions<-function(word,letters=tokens){
@@ -214,7 +250,6 @@ apply_depth_multiple<- function(funs,word){
   for(i in funs){
     temp_list= apply_depth(fun=i,word = word, warm.start = 1,results = results)
     index=index+1
-    #if(index==1){results[["orig_word"]]<- NULL}
     results= temp_list
   }
   results
