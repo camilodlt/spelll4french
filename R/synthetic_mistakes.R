@@ -70,41 +70,28 @@ transposes <- function(word){
 return(transposes_list)
 }
 
-replaces <- function(word,letters=tokens){
+# replaces #####
 
+replaces<- function(word,letters=tokens){
   chars=strsplit(word,split="")[[1]]
-
   size=length(chars)
-
   replaces_list = list()
 
-  for(i in 1:size){
-    begin= if((i-1)>0) {paste(chars[1:(i-1)], collapse = "")}
+  begin= stringi::stri_sub(word, to=1:size)
+  end= stringi::stri_sub(word, from=2:size)
 
-    end = if((i+1)<=size) {paste(chars[(i+1):size],collapse ="")}
+  begin= as.list(begin)
+  end=as.list(end)
+  end[[size]]<- character(0)
 
-    if(!is.null(end)){
-    combinations= purrr::cross(list(letters,end))
-
-    concatenations= unlist(purrr::map(combinations,~paste(purrr::flatten_chr(.), collapse="")))
-    replaces_list[[i]]= concatenations
-    }
-
-    if(!is.null(begin) & !is.null(end)){
-      replaces_list[[i]]= paste0(begin, replaces_list[[i]])
-    }
-
-    if(!is.null(begin) & is.null(end)){
-
-      combinations= purrr::cross(list(begin,letters))
-
-      concatenations= unlist(purrr::map(combinations,~paste(purrr::flatten_chr(.), collapse="")))
-
-      replaces_list[[i]]= concatenations
-    }
-  }
+  # repeat
+  begin<-purrr::map(begin,~rep(.x,length(tokens)))
+  # replace last character of every repeated word by a token
+  begin<-purrr::map(begin, ~stringi::stri_sub_replace(.x,from=nchar(.x[1]),nchar(.x[1]),replacement = tokens))
+  # paste with ends
+  replaces_list <-purrr::map2(begin,end,paste0)
   return(replaces_list)
-}
+  }
 
 # INSERTS
 insertions<-function(word,letters=tokens){
