@@ -1,4 +1,4 @@
-
+# SPLITS ------
 splits = function(word){
 
   #stopifnot(length(word)==1)
@@ -27,10 +27,7 @@ splits = function(word){
   return(biglist)
 
 }
-
-
-#deletes = [L + R[1:] for L, R in splits if R]
-
+# DELETES ------
 deletes = function(word){
 
     chars=strsplit(word,split="")[[1]]
@@ -44,10 +41,7 @@ deletes = function(word){
     }
     return(deletions)
 }
-
-# transposes = [L + R[1] + R[0] + R[2:] for L, R in splits if len(R)>1]
-
-
+# TRANSPOSES ------
 transposes <- function(word){
 
   chars=strsplit(word,split="")[[1]]
@@ -69,9 +63,7 @@ transposes <- function(word){
   }
 return(transposes_list)
 }
-
-# replaces #####
-
+# REPLACES ------
 replaces<- function(word,letters=tokens){
   chars=strsplit(word,split="")[[1]]
   size=length(chars)
@@ -92,8 +84,7 @@ replaces<- function(word,letters=tokens){
   replaces_list <-purrr::map2(begin,end,paste0)
   return(replaces_list)
   }
-
-# INSERTS
+# INSERTS ------
 insertions<-function(word,letters=tokens){
   chars=strsplit(word,split="")[[1]]
 
@@ -127,9 +118,7 @@ insertions<-function(word,letters=tokens){
   insertions_list <-purrr::map2(begin,end,paste0)
   return(insertions_list)
   }
-
-###
-
+# APPLY_DEPTH ------
 apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NULL){
   function_name= fun
   fun_eval=eval(parse(text =fun ))
@@ -162,6 +151,64 @@ apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NU
         )
       # names for each sublist
       over=names_new_list # old names
+      # Concatenated names
+      names_new_list= names_new_list=paste0(substr(function_name,1,4),(i-1),'_',over)
+      #Set names
+      temp_result<-purrr::set_names(temp_result,nm =names_new_list)
+
+      # append
+      results=append(results,temp_result)
+    }
+
+  }
+  return(results)
+}
+# APPLY_DEPTH_MULTIPLE ------
+apply_depth_multiple<- function(funs,word){
+
+  results= list()
+  results[["orig_word"]]= word
+  index=0
+
+  for(i in funs){
+    temp_list= apply_depth(fun=i,word = word, warm.start = 1,results = results)
+    index=index+1
+    results= temp_list
+  }
+  results
+}
+# SIMPLE_APPLY ------
+simple_apply<- function(depth=1, fun='transposes', word, warm.start=0, results=NULL){
+  # get the function to eval
+  function_name= fun
+  fun_eval=eval(parse(text =fun ))
+  # initialize parameter
+  depth=depth+1
+  # if called directly and word provided
+  if(warm.start==0){
+    temp= list()
+    temp[[1]]= word
+
+    for(i in 2:depth){
+      temp_result=unlist(fun_eval(temp[[i-1]]))
+      temp_result= unique(temp_result)
+      # append
+      temp_name= paste0(function_name,(i-1))
+      temp[[temp_name]]<- temp_result
+
+    }
+    temp[[1]]<- NULL
+    results=temp
+  } else
+    # if called by apply multiple
+  {
+    names_new_list<- names(results)
+    #results is provided
+    for(i in 2:depth){
+      temp_result=unique(fun_eval(temp[[i-1]])
+      )
+      # names for each sublist
+      over=names_new_list # old names
 
       # Concatenated names
       names_new_list= names_new_list=paste0(substr(function_name,1,4),(i-1),'_',over)
@@ -175,25 +222,6 @@ apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NU
   }
   return(results)
 }
-
-
-
-
-apply_depth_multiple<- function(funs,word){
-
-  results= list()
-  results[["orig_word"]]= word
-
-  index=0
-
-  for(i in funs){
-    temp_list= apply_depth(fun=i,word = word, warm.start = 1,results = results)
-    index=index+1
-    results= temp_list
-  }
-  results
-}
-
 # on dictionnary
   #Prefer split first
 ##
