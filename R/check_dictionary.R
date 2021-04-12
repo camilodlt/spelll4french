@@ -27,7 +27,8 @@ check_dictionary<- function(word,dictionary=dict){
 }
 
 #
-check_words<- function(word,dictionary= dict,...){
+check_words<- function(word,dictionary= dict, n_transformations='single_trans',
+                       fun=c('transposes','insertions','deletes','replaces'),...){
 # word in dict
   word_in_dict=check_dictionary(word,dictionary)
   proper_in_dict=check_proper_dictionary(word,dictionary)
@@ -43,7 +44,10 @@ check_words<- function(word,dictionary= dict,...){
 
 # decision
   if(!word_in_dict & !proper_in_dict){
-    results = apply_depth(word = word,...)
+
+    # Apply_depth
+    if(n_transformations=='single_trans'){ # single_trans will use apply_depth
+    results = apply_depth(word = word,fun=fun[1],...) # first function will be used if multiple or a single are provided
     results=unique(unlist(results))
     # DT
     results= data.frame(Flexion=results)
@@ -51,9 +55,16 @@ check_words<- function(word,dictionary= dict,...){
     subset<-dictionary[results,nomatch=0]
       # Check emptyness
     if(identical(subset, character(0))){return(word)} else {subset[['Flexion']]}
-    #in_dict=purrr::map_lgl(results, check_dictionary, dictionary)
-    #indices= which(in_dict)
-    #extract = results[indices]
-    #return(extract)
-  }
-}
+    } else
+
+    if(n_transformations=='multiple_trans'){
+      results = apply_depth_multiple(word = word,funs=fun,...) # transformations must be provided
+      results=unique(unlist(results))
+      # DT
+      results= data.frame(Flexion=results)
+      setDT(results,key = 'Flexion')
+      subset<-dictionary[results,nomatch=0]
+      # Check emptyness
+      if(identical(subset, character(0))){return(word)} else {subset[['Flexion']]}
+    }
+}}
