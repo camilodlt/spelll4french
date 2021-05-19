@@ -19,4 +19,5 @@ Imports:
     Rcpp,
     data.table
 LinkingTo: 
-    Rcpp
+    Rcpp,
+    BH
