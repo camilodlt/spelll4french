@@ -51,3 +51,4 @@ tokens<- c("a", "á", "à", "â", "b", "c",#"æ",
            "û", "ü", "v", "w", "x", "y","z")
 
 usethis::use_data(dict,extended_tokens,tokens,internal = TRUE,overwrite = TRUE)
+

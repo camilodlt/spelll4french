@@ -16,6 +16,7 @@ check_proper_dictionary<- function(word,dictionary=dict){
 
 #' @export
 check_dictionary<- function(word,dictionary=dict){
+
   # With DT
   subset<-dictionary[Flexion==word][['Flexion']]
   if(!identical(subset, character(0))){return(TRUE)} else {return(FALSE)}
@@ -73,4 +74,6 @@ check_words<- function(word,dictionary= dict, n_transformations='single_trans',
       # Check emptyness
       if(identical(subset, character(0))){return(word)} else {subset[['Flexion']]}
     }
-}}
+  }}
+
+
