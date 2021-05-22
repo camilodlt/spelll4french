@@ -9,7 +9,6 @@ proper_noun<- function(word){
 #' @export
 check_proper_dictionary<- function(word,dictionary=dict){
   proper= proper_noun(word)
-  #if(proper %in% dict$Flexion) {return(TRUE)} else {return(FALSE)}
   # With DT
   subset<-dictionary[Flexion==proper][['Flexion']]
   if(!identical(subset, character(0))){return(TRUE)} else {return(FALSE)}
@@ -17,9 +16,6 @@ check_proper_dictionary<- function(word,dictionary=dict){
 
 #' @export
 check_dictionary<- function(word,dictionary=dict){
-
-  #if(word %in% dict$Flexion) {return(TRUE)} else {return(FALSE)}
-
   # With DT
   subset<-dictionary[Flexion==word][['Flexion']]
   if(!identical(subset, character(0))){return(TRUE)} else {return(FALSE)}
