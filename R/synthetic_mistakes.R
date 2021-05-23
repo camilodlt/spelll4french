@@ -5,23 +5,26 @@ splits = function(word){
 
   size=length(chars)
 
-  start= list()
-  stop=list()
+  start= expandingList()
+  stop=expandingList()
 
   for (i in 1:size){
     if((i-1)>0){
       split_left=chars[1:(i-1)]
-      start=append(start,paste(split_left, collapse = ""))
+      start$add(paste(split_left, collapse = ""))
+      #start=append(start,paste(split_left, collapse = ""))
     }
     if((i)>1){
       split_right= chars[(i):size]
-      stop=append(stop,paste(split_right, collapse = ""))
+      stop$add(paste(split_right, collapse = ""))
+      #stop=append(stop,paste(split_right, collapse = ""))
 
     }
 
   }
 
-  biglist=mapply(c, start,stop, SIMPLIFY=FALSE)
+  biglist=mapply(c, start$as.list(),stop$as.list(), SIMPLIFY=FALSE)
+  rm(chars,size,start,stop,split,split_left,start,split_right,stop) # test_rm
   return(biglist)
 
 } else {return(word)}}
@@ -32,12 +35,14 @@ deletes = function(word){
 
     size=length(chars)
 
-    deletions= list()
+    deletions= expandingList()
 
     for(i in 1:size){
-      deletions= append(deletions,paste(chars[-i], collapse = ""))
+      deletions$add(paste(chars[-i], collapse = ""))
+      #deletions= append(deletions,paste(chars[-i], collapse = ""))
     }
-    return(deletions)
+
+    return(deletions$as.list())
   } else { return(word)}
   }
 # TRANSPOSES ------
@@ -47,7 +52,7 @@ transposes <- function(word){
 
   size=length(chars)
 
-  transposes_list = list()
+  transposes_list = expandingList()
 
   for(i in 1:size){
     text= paste(
@@ -58,9 +63,10 @@ transposes <- function(word){
         if((i+2)<=size){chars[(i+2):size]}), # end
       collapse = "")
     if(text!= word){
-    transposes_list= append(transposes_list,text)}
+      transposes_list$add(text)
+      #transposes_list= append(transposes_list,text)}
   }
-return(transposes_list)
+return(transposes_list$as.list())
 } else {return(word)}
 
 }
@@ -75,7 +81,6 @@ replaces<- function(word,letters=tokens){
   if(nchar(word)>1){
   chars=strsplit(word,split="")[[1]]
   size=length(chars)
-  replaces_list = list()
 
   begin= stringi::stri_sub(word, to=1:size)
   end= stringi::stri_sub(word, from=2:size)
@@ -92,17 +97,17 @@ replaces<- function(word,letters=tokens){
   replaces_list <-purrr::map2(begin,end,paste0)
   return(replaces_list)
   }
+
   }
 # INSERTS ------
 insertions<-function(word,letters=tokens){
   if (nchar(word) >=1){
   chars=strsplit(word,split="")[[1]]
   size=length(chars)
-
-  insertions_list = list()
-  begin=list()
-  end= list()
-  for(i in 1:(size+1)){
+  Size<-size+1
+  begin=expandingList(Size)
+  end= expandingList(Size)
+  for(i in 1:Size){
     temp_begin= if((i-1)==0){character(0)}else{chars[1:i-1]}
     temp_end=if(i>size){character(0)}else{chars[i:size]}
 
@@ -111,9 +116,13 @@ insertions<-function(word,letters=tokens){
     temp_end= paste0(temp_end,collapse = '')
 
     # append
-    begin= append(begin,temp_begin)
-    end= append(end,temp_end)
+    begin$add(temp_begin)
+    end$add(temp_end)
+    # begin= append(begin,temp_begin)
+    # end= append(end,temp_end)
   }
+  begin<- begin$as.list()
+  end<- end$as.list()
   # Combine with Tokens
   for(i in 1:length(begin)){
     if(i==1){
@@ -127,7 +136,9 @@ insertions<-function(word,letters=tokens){
   insertions_list <-purrr::map2(begin,end,paste0)
   return(insertions_list)
   }
+
 }
+
 # APPLY_DEPTH ------
 apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NULL){
   function_name= fun
@@ -176,6 +187,8 @@ apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NU
 
   }
   results<- results[!duplicated(results)]
+  rm(function_name,fun_eval,depth, temp,temp_result, temp_name,names_new_list,
+     over) # test_rm
   return(results)
 }
 # APPLY_DEPTH_MULTIPLE ------
