@@ -42,11 +42,9 @@ decider_word<- function(x,prob= 0.3){
     mistakes<- map(mistakes, ~sample(x = ., size = length(mistakes[[1]]), replace = T))
     mistakes= unlist (mistakes)
     mistake= sample(mistakes, size = 1)
-    rm(mistakes, to_sample)
     if(is.null(mistake)){mistake<-'ERROR OCCURED'}
     return(mistake)
-    #print(sort( sapply(ls(),function(x){object.size(get(x))})/1024/1024))
     }
 }
 
-tokens<- letters
+#tokens<- letters
