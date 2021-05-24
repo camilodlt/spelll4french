@@ -24,7 +24,6 @@ splits = function(word){
   }
 
   biglist=mapply(c, start$as.list(),stop$as.list(), SIMPLIFY=FALSE)
-  rm(chars,size,start,stop,split,split_left,start,split_right,stop) # test_rm
   return(biglist)
 
 } else {return(word)}}
@@ -63,7 +62,7 @@ transposes <- function(word){
         if((i+2)<=size){chars[(i+2):size]}), # end
       collapse = "")
     if(text!= word){
-      transposes_list$add(text)
+      transposes_list$add(text)}
       #transposes_list= append(transposes_list,text)}
   }
 return(transposes_list$as.list())
@@ -146,27 +145,32 @@ apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NU
   depth=depth+1
   # if called directly and word provided
   if(warm.start==0){
-  temp= list()
-  temp[[1]]= word
+  temp= expandingList()
+  temp$add_named(word,'orig_word')
+  # temp[[1]]= word
 
   for(i in 2:depth){
-    temp_result=unlist(purrr::map(temp[[(i-1)]],fun_eval))
+    temp_result=unlist(purrr::map(temp$as.list()[[(i-1)]],fun_eval))
     temp_result= unique(temp_result)
     # append
     temp_name= paste0(function_name,(i-1))
-    temp[[temp_name]]<- temp_result
+    temp$add_named(temp_result,temp_name)
+    # temp[[temp_name]]<- temp_result
 
   }
-  temp[[1]]<- NULL
-  results=temp
+  # temp[[1]]<- NULL
+  # results=temp
+  results<- temp$as.list()
+  results[[1]]<- NULL
   } else
   # if called by apply multiple
   {
-    names_new_list<- names(results)
+    l<- results$as.list()
+    names_new_list<- names(l)
     #results is provided
     for(i in 2:depth){
       temp_result=purrr::map( # every sublist
-        results[names_new_list],~unique(unlist(purrr::map(# every word
+        l[names_new_list],~unique(unlist(purrr::map(# every word
           .,fun_eval)
           )))
       # names for each sublist
@@ -182,28 +186,31 @@ apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NU
       # correct names, if dropped for next iter
       names_new_list<- names(temp_result)
       # append
-      results=append(results,temp_result)
+      # results=append(results,temp_result)
+      results$add(temp_result)
     }
 
   }
-  results<- results[!duplicated(results)]
-  rm(function_name,fun_eval,depth, temp,temp_result, temp_name,names_new_list,
-     over) # test_rm
+  # results<- results[!duplicated(results)]
+  results$rm_duplicated()
   return(results)
 }
 # APPLY_DEPTH_MULTIPLE ------
 apply_depth_multiple<- function(funs,word){
 
-  results= list()
-  results[["orig_word"]]= word
+  results= expandingList()
+  results$add_named(word, "orig_word")
+  # results= list()
+  # results[["orig_word"]]= word
   index=0
 
   for(i in funs){
-    temp_list= apply_depth(fun=i,word = word, warm.start = 1,results = results)
+    # temp_list= apply_depth(fun=i,word = word, warm.start = 1,results = results)
+    apply_depth(fun=i,word = word, warm.start = 1,results = results)
     index=index+1
-    results= temp_list
+    #results= temp_list
   }
-  results
+  results$as.list()
 }
 # SIMPLE_APPLY ------
 simple_apply<- function(depth=1, fun='transposes', word, warm.start=0, results=NULL){
