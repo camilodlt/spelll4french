@@ -15,13 +15,36 @@ expandingList <- function(capacity = 10) {
       methods$double.size()
     }
 
+    if(is_list(val)){
+      for(i in 1:length(val)){
+        methods$add_named(val[[i]],names(val[i]))
+      }
+    } else {
+      length <<- length + 1
+      buffer[[length]] <<- val
+    }
+
+  }
+
+  methods$add_named <- function(val, name) {
+    if(length == capacity) {
+      methods$double.size()
+    }
     length <<- length + 1
     buffer[[length]] <<- val
-  }
+    names(buffer)[length]<<- name
+   }
 
   methods$as.list <- function() {
     b <- buffer[0:length]
     return(b)
+  }
+  methods$rm_duplicated <- function() {
+    #buffer<<- purrr::flatten(buffer)
+    buffer<<-buffer[!duplicated(buffer)]
+    buffer<<-purrr::discard(buffer, purrr::is_null)
+    l<- length(buffer)
+    length <<- l
   }
 
   methods
