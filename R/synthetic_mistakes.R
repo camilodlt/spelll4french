@@ -193,10 +193,11 @@ apply_depth<- function(depth=1, fun='transposes', word, warm.start=0, results=NU
   }
   # results<- results[!duplicated(results)]
   results$rm_duplicated()
+  results$reduce(n=500)
   return(results)
 }
 # APPLY_DEPTH_MULTIPLE ------
-apply_depth_multiple<- function(funs,word){
+apply_depth_multiple<- function(funs,word,ret1){
 
   results= expandingList()
   results$add_named(word, "orig_word")
@@ -210,7 +211,9 @@ apply_depth_multiple<- function(funs,word){
     index=index+1
     #results= temp_list
   }
-  results$as.list()
+  if(ret1==TRUE){
+  results$sample1()
+  } else{results$as.list()}
 }
 # SIMPLE_APPLY ------
 simple_apply<- function(depth=1, fun='transposes', word, warm.start=0, results=NULL){

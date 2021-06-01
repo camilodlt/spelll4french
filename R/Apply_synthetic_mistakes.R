@@ -1,5 +1,5 @@
 
-source('~/Documents/Own Projects/github/spelll4french/R/synthetic_mistakes.R')
+#source('~/Documents/Own Projects/github/spelll4french/R/synthetic_mistakes.R')
 decider <- function(x, sep= " ",...){
   rand<-sample(0:1, size = 1, prob = c(0.5, 0.5))
   if(rand==0){
@@ -35,14 +35,9 @@ decider_word<- function(x,prob= 0.3){
     return(x)
   } else {
     functions<- c("de_split","deletes","transposes","replaces","insertions")
-    to_sample<- sample(1:5)
+    to_sample<- sample(1:5,1)
     sampled<- sample(functions, to_sample)
-    mistakes <- apply_depth_multiple(sampled, x)
-    mistakes[['orig_word']]<- NULL
-    mistakes<- map(mistakes, ~sample(x = ., size = length(mistakes[[1]]), replace = T))
-    mistakes= unlist (mistakes)
-    mistake= sample(mistakes, size = 1)
-    if(is.null(mistake)){mistake<-'ERROR OCCURED'}
+    mistake <- spell4french:::apply_depth_multiple(sampled, x,ret1=TRUE)
     return(mistake)
     }
 }
