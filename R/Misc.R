@@ -1,3 +1,8 @@
+# Expanding List class ------
+#
+#Function to create a list optimized for memory.
+#The list doubles in size as the items are added.
+#
 
 expandingList <- function(capacity = 10) {
   buffer <- vector('list', capacity)
