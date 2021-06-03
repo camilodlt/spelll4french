@@ -44,7 +44,7 @@ all_tokens<-x%>% filter(nchar(Flexion)>1)%>% .$Flexion%>%
 
 extended_tokens <- unique(unlist(all_tokens))
 
-tokens<- c("a", "á", "à", "â", "b", "c",#"æ",
+tokens<- c("a", "à", "â", "b", "c",#"æ",
            "ç", "d", "e", "é", "è", "ê", "ë", "f", "g", "h", "i", #"í",
            "î", "ï", "j", "k", "l", "m", "n","o", #"ó",
            "ô", "œ", "p", "q", "r","s", "t", "u", "ù",#"ö","ú","ÿ"

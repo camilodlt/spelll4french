@@ -26,9 +26,6 @@ decider_f <- function(x, sep= " ",...){
   }
 }
 
-de_split <- function(x){
-  return(unlist(map(splits(x), ~paste(., collapse = ' '))))
-}
 decider_word<- function(x,prob= 0.3){
   rand<-sample(0:1, size = 1, prob = c(1-prob, prob))
   if(rand==0){
