@@ -46,6 +46,7 @@ i_dierese<- c("ü","ö") # ï
 o_dierese<- c("ï") # ö
 
 # Turn into a DF: Assign neighbors to tokens ------
+natural_dict <-data.frame(letters=tokens)
 natural_dict$neighbor<- NA_character_
 natural_dict$neighbor[natural_dict$letters=="a"]<- list(a)
 natural_dict$neighbor[natural_dict$letters=="à"]<- list(a_tilde_)
@@ -91,16 +92,7 @@ natural_dict%>% filter(!is.na(neighbor))%>%.$letters
 
 # Unnest tibble -------
 natural_dict_tibble <- natural_dict%>% as_tibble()
-natural_dict_unnested<- natural_dict%>% unnest(neighbor)
+natural_dict_unnested<- natural_dict%>% unnest(neighbor)%>%
+  filter(!is.na(neighbor))
 
 natural_dict_unnested_DT<- as.data.table(natural_dict_unnested)
-# FUNCTIONS ------
-# natural mistake fun
-  # bonjour=> bonjoiur
-natural_mistake_azerty <- function(word){
-  if(nchar(word)>1){
-    chars=strsplit(word,split="")[[1]]
-    size=length(chars)
-  }
-
-}
